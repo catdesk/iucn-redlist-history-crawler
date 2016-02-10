@@ -1,6 +1,8 @@
 import mechanicalsoup
+import random
+import time
 
-species = ["Ailuropoda melanoleuca", "Ardea insignis", "Chthonicola sagittatus"]
+species_list = ["Ailuropoda melanoleuca", "Ardea insignis", "Chthonicola sagittatus"]
 base_url = "http://www.iucnredlist.org"
 species_data = []
 
@@ -45,10 +47,13 @@ def get_species_data(page, species):
 
     species_data.append((species, synonyms, assessments))
 
-for specie in species:
+for species in species_list:
+    random_sleep = random.randint(1, 5)
+    print(random_sleep)
+    time.sleep(random_sleep)
     print("#####specie#####")
-    print(specie)
-    get_species_data(page, specie)
+    print(species)
+    get_species_data(page, species)
     
 
 
