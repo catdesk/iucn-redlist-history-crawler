@@ -36,7 +36,12 @@ def get_species_data(page, species):
 
     search_results = browser.submit(search_form, page.url)
 
-    species_listing = search_results.soup.find("span", class_="sciname", string=species)
+    species_listing = ''
+    if search_results.soup.find("span", class_="sciname", string=species) != None:
+        species_listing = search_results.soup.find("span", class_="sciname", string=species)
+    else:
+        species_listing = search_results.soup.find("span", class_="sciname")
+
     species_listing_link = species_listing.previous_element.attrs['href']
     species_page = browser.get(base_url + species_listing_link)
     
