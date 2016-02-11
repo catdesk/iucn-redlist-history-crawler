@@ -67,6 +67,19 @@ def get_species_data(page, species):
         assessments.append((year, level))
 
     species_data.append((species, synonyms, assessments))
+    write_results(species, synonyms, assessments)
+
+def write_results(species, synonyms, assessments):
+    with open('out.csv', 'a', newline='') as csvfile:
+        outputter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for assess in assessments:
+            row_list = []
+            row_list.append(species)
+            row_list.append(synonyms)
+            row_list.append(assess[0])
+            row_list.append(assess[1])
+            print(row_list)
+            outputter.writerow(row_list)
 
 for species in species_list:
     random_sleep = random.randint(1, 9)
@@ -75,16 +88,4 @@ for species in species_list:
     print("#####specie#####")
     print(species)
     get_species_data(page, species)
-
-with open('out.csv', 'w', newline='') as csvfile:
-    outputter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    for entry in species_data:
-        for assess in entry[2]:
-            row_list = []
-            row_list.append(entry[0])
-            row_list.append(entry[1])
-            row_list.append(assess[0])
-            row_list.append(assess[1])
-            print(row_list)
-            outputter.writerow(row_list)
         
