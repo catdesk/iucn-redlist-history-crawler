@@ -1,13 +1,34 @@
 import mechanicalsoup
 import random
 import time
+import csv
 
-species_list = ["Ailuropoda melanoleuca", "Ardea insignis", "Chthonicola sagittatus"]
-base_url = "http://www.iucnredlist.org"
+csv_name_file = 'table1.csv'
+column_number = 1 # Column with scientific names to query for
+
+species_list = []
 species_data = []
 
+base_url = "http://www.iucnredlist.org"
 browser = mechanicalsoup.Browser()
 page = browser.get(base_url + "/search")
+
+# import csv file with species names
+listfile_unprocessed = []
+with open(csv_name_file, newline='') as csvfile:
+     listfile = csv.reader(csvfile, delimiter=',', quotechar='"')
+     for row in listfile:
+         listfile_unprocessed.append(row)
+
+print(listfile_unprocessed)
+
+for row in listfile_unprocessed:
+    species_name = row[(column_number - 1)]
+    if species_name not in species_list:
+        species_list.append(species_name)
+
+species_list.pop(0) # Get rid of column title
+print(species_list)
 
 def get_species_data(page, species):
     search_form = page.soup.select("form")[0]
