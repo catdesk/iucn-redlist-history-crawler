@@ -69,19 +69,22 @@ def get_species_data(page, species):
     species_data.append((species, synonyms, assessments))
 
 for species in species_list:
-    random_sleep = random.randint(1, 5)
+    random_sleep = random.randint(1, 9)
     print(random_sleep)
     time.sleep(random_sleep)
     print("#####specie#####")
     print(species)
     get_species_data(page, species)
-    
 
-
-print("######species_data#####")
-print("##########1##########")
-print(species_data)
-print("##########2##########")
-print("##########3##########")
-print("##########4##########")
-
+with open('out.csv', 'w', newline='') as csvfile:
+    outputter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for entry in species_data:
+        for assess in entry[2]:
+            row_list = []
+            row_list.append(entry[0])
+            row_list.append(entry[1])
+            row_list.append(assess[0])
+            row_list.append(assess[1])
+            print(row_list)
+            outputter.writerow(row_list)
+        
