@@ -20,8 +20,6 @@ with open(csv_name_file, newline='') as csvfile:
      for row in listfile:
          listfile_unprocessed.append(row)
 
-print(listfile_unprocessed)
-
 for row in listfile_unprocessed:
     species_name = row[(column_number - 1)]
     if species_name not in species_list:
@@ -62,14 +60,22 @@ def get_species_data(page, species):
         print(synonyms)
     
     # Process IUCN Red List Assessments
-    assessment_table = species_page.soup.find(string="Previously published Red List assessments:").find_previous("tr").find_all("tr")
+    assessment_table = ''
     assessments = []
+    current_assessment_year = species_page.soup.find(string="Year Published:").find_next("td").string
+    current_assessment = str(species_page.soup.find(string="Red List Category & Criteria:").find_next("td")).split('\n')[1:-4]
+    current_assessment_string = ''.join(current_assessment).strip()
+    assessments.append((current_assessment_year, current_assessment_string))
+    print('####current_assessments')
+    print(assessments)
     
-    for row in assessment_table:
-        cells = row.find_all("td")
-        year = cells[0].string
-        level = cells[2].next_element.string.strip().split()[-1].strip('()')
-        assessments.append((year, level))
+    if species_page.soup.find(string="Previously published Red List assessments:") != None:
+        assessment_table = species_page.soup.find(string="Previously published Red List assessments:").find_previous("tr").find_all("tr")
+        for row in assessment_table:
+            cells = row.find_all("td")
+            year = cells[0].string
+            level = cells[2].next_element.string.strip().split()[-1].strip('()')
+            assessments.append((year, level))
 
     species_data.append((species, synonyms, assessments))
     write_results(species, synonyms, assessments)
