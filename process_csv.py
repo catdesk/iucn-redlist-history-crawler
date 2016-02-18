@@ -31,7 +31,6 @@ for line in listfile_unprocessed:
     if sci_name in species_data:
         assessment_list = species_data[sci_name]
         assessment_list.append([assessment_year, assessment_val])
-        species_data.update({sci_name: assessment_list})
     else:
         species_data.update({sci_name: [[assessment_year, assessment_val]]})
     species_data[sci_name].sort()
