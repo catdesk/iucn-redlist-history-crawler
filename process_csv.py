@@ -47,17 +47,25 @@ def write_results(sci_name, year, assessed_val):
         outputter.writerow(row_list)
 
 for sci_name, assessment_list in species_data.items():
-    year = 1965
+    print(sci_name)
+    print(assessment_list)
     last_assessed_val = 'NA'
+    last_assessed_year = 1965
+    assessment_table = {}
     for assessment in assessment_list:
+        year = 1965
+        print(assessment)
         assessment_year = int(assessment[0])
         assessed_val = assessment[1]
         while year < 2016:
             if assessment_year == year:
                 last_assessed_val = assessed_val
-            if year > 1997:
-                print(year)
-                print(year > 1997)
-                write_results(sci_name, year, last_assessed_val)
+                last_assessed_year = assessment_year
+            if year >= last_assessed_year:
+                assessment_table[year] = last_assessed_val
+                print(year, last_assessed_val)
             year += 1
+    for row in assessment_table.items():
+        if row[0] > 1997:
+            write_results(sci_name, row[0], row[1])
     
