@@ -5,23 +5,30 @@ import urllib.request
 base_url = 'http://apiv3.iucnredlist.org/api/v3'
 token = # need to import from token.txt
 
-# just pulled all this csv stuff from other file, didn't customise for this use yet
 csv_data_file = 'table1.csv'
+column_number = 1
 out_file = 'synonyms.csv'
 
-# see crawler for how to use only specific column
-# import csv file with species data
+species_list = []
+searched_list = []
+unsearched_list = []
+names_and_synonyms = {}
+
+# import csv file with species names
 listfile_unprocessed = []
 with open(csv_data_file, newline='') as csvfile:
      listfile = csv.reader(csvfile, delimiter=',', quotechar='"')
      for row in listfile:
          listfile_unprocessed.append(row)
 
+for row in listfile_unprocessed:
+    species_name = row[(column_number - 1)]
+    if species_name not in species_list:
+        species_list.append(species_name)
+
 # Remove header row
 listfile_unprocessed.pop(0)
 
-names_and_synonyms = {}
-    
 def request_synonyms(sci_name):
     req = urllib.request.urlopen(base_url + '/species/synonym/' + sci_name + token)
     
@@ -38,11 +45,22 @@ def request_synonyms(sci_name):
         else:
             names_and_synonyms.update({accepted_name: [synonym]})
 
-        # Make sure all synonyms are grabbed if original search is not an accepted name
-        if accepted_name not in search_list:
+    check_if_in_list(species_list, accepted_name, unsearched_list)
 
-print(names_and_synonyms)
-request_synonyms('Geoemyda rubida')
-print(names_and_synonyms)
-request_synonyms('Rhinoclemmys rubida')
-print(names_and_synonyms)
+def check_if_in_list(search_list, species_name, unsearched_list):
+    if species_name not in search_list:
+        print('not in search list')
+        print('species_name')
+        if species_name not in unsearched_list:
+            unsearched_list.append(species_name)
+            print('Unsearched:')
+            print('species_name')
+            print('unsearched_list')
+
+for species in species_list:
+    unsearched_list.append(species)
+
+while unsearched_list:
+    species = unsearched_list.pop(0)
+    request_synonyms(species)
+    searched_list.append(species)
