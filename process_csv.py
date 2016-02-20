@@ -14,7 +14,6 @@ with open(csv_data_file, newline='') as csvfile:
 listfile_unprocessed.pop(0)
 
 species_data = {}
-assessment_values = set()
 
 for line in listfile_unprocessed:
     sci_name = line[0]
@@ -34,8 +33,6 @@ for line in listfile_unprocessed:
         assessment_val = 'DD'
     elif assessment_val == 'Least Concern':
         assessment_val = 'LC'
-    assessment_values.add(assessment_val)
-    print(sci_name)
     if sci_name in species_data:
         assessment_list = species_data[sci_name]
         assessment_list.append([assessment_year, assessment_val])
@@ -52,7 +49,6 @@ def write_results(sci_name, year, assessed_val):
         print(row_list)
         outputter.writerow(row_list)
 
-# Read it backwards from 2015 to 1998 instead of dealing with sketchy sorting, still hasn't been tested
 for sci_name, assessment_list in species_data.items():
     assessment_list.reverse()
     print(sci_name)
